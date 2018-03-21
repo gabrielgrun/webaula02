@@ -139,6 +139,11 @@ public class AutorForm extends javax.swing.JFrame {
         autor.setNome(txtNome.getText());
         
         try {
+            if (mode.equals("INS")){
+                autorDAO.save(autor);
+            } else if (mode.equals("UPD")) {
+                autorDAO.update(autor);
+            }
             autorDAO.save(autor);
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage());
@@ -180,6 +185,7 @@ public class AutorForm extends javax.swing.JFrame {
         });
     }
     private AutorDAO autorDAO;
+    private String mode = "INS";
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnNovo;
     private javax.swing.JButton btnRemover;

@@ -12,14 +12,14 @@ import model.Autor;
 import util.ConnectionJDBC;
 
 public class AutorDAO {
-    
+
     Connection connection;
-    
+
     public AutorDAO() throws Exception {
-       //Obtém uma conexão 
-       connection = ConnectionJDBC.getConnection();
+        //Obtém uma conexão 
+        connection = ConnectionJDBC.getConnection();
     }
-    
+
     public void save(Autor autor) throws Exception {
         String SQL = "INSERT INTO AUTOR(NOME) VALUES(?)";
         try {
@@ -31,28 +31,38 @@ public class AutorDAO {
             throw new Exception(ex);
         }
     }
-    
-    public void update(Autor autor) throws Exception{
+
+    public void update(Autor autor) throws Exception {
         String SQL = "UPDATE AUTOR SET NOME=? WHERE AUTOR_ID=?";
-        try{
+        try {
             PreparedStatement p = connection.prepareStatement(SQL);
             p.setString(1, autor.getNome());
             p.setInt(2, autor.getAutor_id());
             p.execute();
-        } catch(SQLException ex){
+        } catch (SQLException ex) {
             throw new Exception(ex);
         }
     }
-    
-    public void delete(Autor autor){
-        
+
+    public void delete(Autor autor) {
+        String SQL = "DELETE FROM AUTOR WHERE AUTOR_ID=?";
+
+        PreparedStatement p;
+        try {
+            p = connection.prepareStatement(SQL);
+            p.setInt(1, autor.getAutor_id());
+            p.execute();
+        } catch (SQLException ex) {
+            Logger.getLogger(AutorDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }
-    
-    public Autor findById(int id){
+
+    public Autor findById(int id) {
         return new Autor();
     }
-    
-    public List<Autor> findAll() throws Exception{
+
+    public List<Autor> findAll() throws Exception {
         //Lista para manter os valores do resultset
         List<Autor> list = new ArrayList<>();
         Autor objeto;
@@ -62,7 +72,7 @@ public class AutorDAO {
             // Executa a SQL e mantém os valores no ResultSet rs
             ResultSet rs = p.executeQuery();
             // Navega pelos registros no rs
-            while(rs.next()) {
+            while (rs.next()) {
                 // Instancia a classe Autor e informa os valores do banco
                 objeto = new Autor();
                 objeto.setAutor_id(rs.getInt("autor_id"));
@@ -71,8 +81,8 @@ public class AutorDAO {
                 list.add(objeto);
             }
             rs.close();
-            p.close(); 
-            
+            p.close();
+
         } catch (SQLException ex) {
             throw new Exception(ex);
         }

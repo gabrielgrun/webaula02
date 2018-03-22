@@ -66,7 +66,8 @@ public class AutorDAO {
         //Lista para manter os valores do resultset
         List<Autor> list = new ArrayList<>();
         Autor objeto;
-        String SQL = "SELECT * FROM AUTOR";
+        String SQL = "SELECT * FROM AUTOR ORDER BY AUTOR_ID";
+        
         try {
             PreparedStatement p = connection.prepareStatement(SQL);
             // Executa a SQL e mantém os valores no ResultSet rs

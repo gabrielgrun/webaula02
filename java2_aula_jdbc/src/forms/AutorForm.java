@@ -23,6 +23,7 @@ public class AutorForm extends javax.swing.JFrame {
      */
     public AutorForm() {
         initComponents();
+        txtID.setEnabled(false);
         //Instancia a classe DAO
         try {
             autorDAO = new AutorDAO();
@@ -163,7 +164,7 @@ public class AutorForm extends javax.swing.JFrame {
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
         Autor autor = new Autor();
         //Usar quando não tiver generator
-        autor.setAutor_id( Integer.parseInt( txtID.getText()));
+        //autor.setAutor_id( Integer.parseInt( txtID.getText()));
         autor.setNome(txtNome.getText());
         
         try {
@@ -203,12 +204,15 @@ public class AutorForm extends javax.swing.JFrame {
        Autor autor = new Autor();
         //Usar quando não tiver generator
         autor.setAutor_id( Integer.parseInt( txtID.getText()));
-        
+        try {
         autorDAO.delete(autor);
         txtID.setText("");
         txtNome.setText("");
         this.mode = "INS";
         listar();
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage());
+        }
     }//GEN-LAST:event_btnRemoverActionPerformed
 
     public void listar(){

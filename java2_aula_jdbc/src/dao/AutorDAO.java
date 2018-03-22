@@ -27,6 +27,7 @@ public class AutorDAO {
             //p.setInt(1, autor.getAutor_id());
             p.setString(1, autor.getNome());
             p.execute();
+            p.close();
         } catch (SQLException ex) {
             throw new Exception(ex);
         }
@@ -39,6 +40,7 @@ public class AutorDAO {
             p.setString(1, autor.getNome());
             p.setInt(2, autor.getAutor_id());
             p.execute();
+            p.close();
         } catch (SQLException ex) {
             throw new Exception(ex);
         }
@@ -52,9 +54,11 @@ public class AutorDAO {
             p = connection.prepareStatement(SQL);
             p.setInt(1, autor.getAutor_id());
             p.execute();
+            p.close();
         } catch (SQLException ex) {
             Logger.getLogger(AutorDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
 
     }
 

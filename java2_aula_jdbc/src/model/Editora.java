@@ -29,4 +29,8 @@ public class Editora {
         this.mun_editora = mun_editora;
     }
     
+    @Override
+    public String toString(){
+        return nome_editora + " - " + mun_editora;
+    }
 }

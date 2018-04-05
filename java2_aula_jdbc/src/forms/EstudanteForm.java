@@ -24,8 +24,12 @@ public class EstudanteForm extends javax.swing.JFrame {
     /**
      * Creates new form EstudanteForm
      */
-    public EstudanteForm() {
+    public EstudanteDAO estudanteDAO;
+
+    public EstudanteForm() throws Exception {
+        estudanteDAO = new EstudanteDAO();
         initComponents();
+        txtID.setEnabled(false);
     }
 
     /**
@@ -245,15 +249,15 @@ public class EstudanteForm extends javax.swing.JFrame {
         Estudante estudante = new Estudante();
 
         estudante.setEstudanteID(Integer.parseInt(txtID.getText()));
-        try { 
-        estudanteDAO.delete(estudante);
-        txtID.setText("");
-        txtNome.setText("");
-        txtCurso.setText("");
-        txtData.setText("");
-        txtStatus.setText("");
-        this.mode = "INS";
-        listar();
+        try {
+            estudanteDAO.delete(estudante);
+            txtID.setText("");
+            txtNome.setText("");
+            txtCurso.setText("");
+            txtData.setText("");
+            txtStatus.setText("");
+            this.mode = "INS";
+            listar();
         } catch (Exception ex) {
             ex.printStackTrace();
             JOptionPane.showMessageDialog(this, ex.getMessage());
@@ -261,16 +265,16 @@ public class EstudanteForm extends javax.swing.JFrame {
     }//GEN-LAST:event_btnRemoverActionPerformed
 
     private void listar() {
-        DefaultTableModel modelo = (DefaultTableModel)tabela.getModel();
+        DefaultTableModel modelo = (DefaultTableModel) tabela.getModel();
         modelo.setNumRows(0);
-        
+
         try {
             for (Estudante estudante : estudanteDAO.findAll()) {
                 SimpleDateFormat f = new SimpleDateFormat("dd/MM/yyyy");
                 String data = f.format(estudante.getDataMatricula());
-                String linha [] = {""+estudante.getEstudanteID(), 
-                estudante.getEstudanteNome(),estudante.getCursoNome(), data, estudante.getStatus(),};
-                
+                String linha[] = {"" + estudante.getEstudanteID(),
+                    estudante.getEstudanteNome(), estudante.getCursoNome(), data, estudante.getStatus(),};
+
                 modelo.addRow(linha);
             }
         } catch (Exception ex) {
@@ -278,9 +282,7 @@ public class EstudanteForm extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, ex.getMessage());
         }
     }
-    
-    
-    
+
     /**
      * @param args the command line arguments
      */
@@ -311,12 +313,15 @@ public class EstudanteForm extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new EstudanteForm().setVisible(true);
+                try {
+                    new EstudanteForm().setVisible(true);
+                } catch (Exception ex) {
+                    Logger.getLogger(EstudanteForm.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }
 
-    private EstudanteDAO estudanteDAO;
     private String mode = "INS";
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnNovo;

@@ -206,7 +206,7 @@ public class EstudanteForm extends javax.swing.JFrame {
             ex.printStackTrace();
             Logger.getLogger(EstudanteForm.class.getName()).log(Level.SEVERE, null, ex);
         }
-        estudante.setStatus(txtStatus.getText());
+        estudante.setStatus(txtStatus.getText().charAt(0));
 
         try {
             if (mode.equals("INS")) {

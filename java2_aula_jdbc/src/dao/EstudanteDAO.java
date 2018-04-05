@@ -84,7 +84,7 @@ public class EstudanteDAO {
                 objeto.setCursoNome(rs.getString("curso"));
                 SimpleDateFormat f = new SimpleDateFormat("dd/MM/yyyy");
                 objeto.setDataMatricula((rs.getDate("data_matricula")));
-                objeto.setStatus(rs.getString("status"));
+                objeto.setStatus(rs.getString("status").charAt(0));
                 
                 list.add(objeto);
             }

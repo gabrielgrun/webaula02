@@ -7,7 +7,7 @@ public class Estudante {
     private String estudanteNome;
     private String cursoNome;
     private Date dataMatricula;
-    private String status;
+    private char status;
 
     public int getEstudanteID() {
         return estudanteID;
@@ -42,10 +42,10 @@ public class Estudante {
     }
 
     public String getStatus() {
-        return status;
+        return ""+status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(char status) {
         this.status = status;
     }
 

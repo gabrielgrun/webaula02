@@ -12,6 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 import model.Editora;
 import model.Livro;
 
@@ -26,6 +27,7 @@ public class LivroForm extends javax.swing.JFrame {
      */
     public LivroForm() {
         initComponents();
+        txtID.setEnabled(false);
         
         try {
             livroDAO = new LivroDAO();
@@ -58,6 +60,10 @@ public class LivroForm extends javax.swing.JFrame {
         txtTitulo = new javax.swing.JTextField();
         txtAno = new javax.swing.JTextField();
         btnSalvar = new javax.swing.JButton();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        tabela2 = new javax.swing.JTable();
+        btnAdd = new javax.swing.JButton();
+        btnRemover = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -74,9 +80,14 @@ public class LivroForm extends javax.swing.JFrame {
                 {null, null, null, null}
             },
             new String [] {
-                "Código", "Título", "", "Title 4"
+                "Código", "Título", "Editora", "Ano"
             }
         ));
+        tabela.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tabelaMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tabela);
 
         jLabel1.setText("Código");
@@ -102,67 +113,109 @@ public class LivroForm extends javax.swing.JFrame {
             }
         });
 
+        tabela2.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null}
+            },
+            new String [] {
+                "ID", "Nome do Autor"
+            }
+        ));
+        jScrollPane3.setViewportView(tabela2);
+
+        btnAdd.setText("Add");
+
+        btnRemover.setText("Remover");
+        btnRemover.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRemoverActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel3)
-                        .addGap(18, 18, 18)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 433, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addGap(18, 18, 18)
-                                .addComponent(txtID, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 202, Short.MAX_VALUE)
-                                .addComponent(jLabel4))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel1)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(txtID, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel2)
+                                        .addGap(25, 25, 25)
+                                        .addComponent(txtTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(36, 36, 36)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(btnSalvar, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(btnRemover))
+                                        .addGap(59, 59, 59)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel4)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(jLabel5)
+                                                .addGap(18, 18, 18)
+                                                .addComponent(txtAno, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel2)
-                                .addGap(25, 25, 25)
-                                .addComponent(txtTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel5)))
+                                .addComponent(jLabel3)
+                                .addGap(18, 18, 18)
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 433, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 418, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
                         .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(txtAno)
-                            .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(206, 206, 206))))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(274, 274, 274)
-                .addComponent(btnSalvar)
-                .addGap(0, 0, Short.MAX_VALUE))
+                        .addComponent(jScrollPane1)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel4)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnSalvar)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel5)
-                    .addComponent(txtTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtAno, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(40, 40, 40)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel3)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel1)
+                                .addComponent(txtID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(btnAdd)
+                                .addComponent(jLabel4)
+                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(35, 35, 35)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel2)
+                                    .addComponent(jLabel5)
+                                    .addComponent(txtTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtAno, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(9, 9, 9)
+                                .addComponent(btnSalvar)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnRemover)))
+                        .addGap(22, 22, 22)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel3)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 65, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -170,20 +223,73 @@ public class LivroForm extends javax.swing.JFrame {
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
        loadComboBox();
+       loadTabela();
     }//GEN-LAST:event_formWindowOpened
 
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
         Livro livro = new Livro();
+        
         livro.setTitulo(txtTitulo.getText());
         livro.setEditora( (Editora) jComboBox1.getSelectedItem());
+        livro.setAno(Integer.parseInt(txtAno.getText()));
+        livro.setDescricao(txtDesc.getText());
         
         try {
-            livroDAO.save(livro);
+            if (mode.equals("INS")) {
+                livroDAO.save(livro);
+            } else if (mode.equals("UPD")) {
+                livro.setLivro_id(Integer.parseInt(txtID.getText()));
+                livroDAO.update(livro);
+            }
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage());
         }
+        limparCampos();
+        loadTabela();
     }//GEN-LAST:event_btnSalvarActionPerformed
 
+    private void tabelaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelaMouseClicked
+        String id = tabela.getValueAt(tabela.getSelectedRow(), 0).toString();
+        int livro_id = Integer.parseInt(id);
+        
+        try {
+            Livro livro = livroDAO.findById(livro_id);
+            txtID.setText(""+ livro_id);
+            txtTitulo.setText(livro.getTitulo());
+            txtAno.setText(""+ livro.getAno());
+            txtDesc.setText(livro.getDescricao());
+            jComboBox1.getModel().setSelectedItem(livro.getEditora());
+            this.mode="UPD";
+            
+        } catch (Exception ex) {
+            Logger.getLogger(LivroForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_tabelaMouseClicked
+
+    private void btnRemoverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoverActionPerformed
+        Livro livro = new Livro();
+
+        livro.setLivro_id(Integer.parseInt(txtID.getText()));
+        try { 
+        livroDAO.delete(livro);
+        txtID.setText("");
+        txtTitulo.setText("");
+        txtDesc.setText("");
+        txtAno.setText("");
+        this.mode = "INS";
+        loadTabela();
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage());
+        }
+    }//GEN-LAST:event_btnRemoverActionPerformed
+
+    public void limparCampos(){
+        txtID.setText("");
+        txtTitulo.setText("");
+        txtDesc.setText("");
+        txtAno.setText("");
+        this.mode="INS";
+    }
     /**
      * @param args the command line arguments
      */
@@ -228,9 +334,31 @@ public class LivroForm extends javax.swing.JFrame {
         }
     }
     
+    private void loadTabela(){
+        DefaultTableModel model = (DefaultTableModel) tabela.getModel();
+        model.setNumRows(0);
+        
+        try {
+            for (Livro livro : livroDAO.findAll()) {
+                String linha[] = {
+                    "" + livro.getLivro_id(),
+                    livro.getTitulo(),
+                    livro.getEditora().getNome_editora(),
+                    ""+livro.getAno()
+                };
+                model.addRow(linha);
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(LivroForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    private String mode = "INS";
     private LivroDAO livroDAO;
     private EditoraDAO editoraDAO;
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAdd;
+    private javax.swing.JButton btnRemover;
     private javax.swing.JButton btnSalvar;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
@@ -240,7 +368,9 @@ public class LivroForm extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTable tabela;
+    private javax.swing.JTable tabela2;
     private javax.swing.JTextField txtAno;
     private javax.swing.JTextArea txtDesc;
     private javax.swing.JTextField txtID;

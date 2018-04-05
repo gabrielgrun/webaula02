@@ -22,7 +22,8 @@ public class LivroDAO {
     }
 
     public void save(Livro livro) throws Exception {
-        String SQL = "INSERT INTO LIVRO VALUES(?, ?, ?, ?)";
+        String SQL = "INSERT INTO LIVRO(EDITORA_ID, TITULO, ANO, DESCRICAO) "
+                + " VALUES(?, ?, ?, ?)";
         try {
             PreparedStatement p = connection.prepareStatement(SQL);
             //p.setInt(1, livro.getLivro_id());
@@ -54,7 +55,7 @@ public class LivroDAO {
     }
 
     public void delete(Livro livro) {
-        String SQL = "DELETE FROM AUTOR WHERE LIVRO_ID=?";
+        String SQL = "DELETE FROM LIVRO WHERE LIVRO_ID=?";
 
         PreparedStatement p;
         try {
@@ -69,8 +70,40 @@ public class LivroDAO {
 
     }
 
-    public Livro findById(int id) {
-        return new Livro();
+    public Livro findById(int id) throws Exception {
+        Livro objeto = new Livro();
+        String SQL = "SELECT L.*, E.NOME, E.MUNICIPIO FROM LIVRO L"
+                + " INNER JOIN EDITORA E ON E.EDITORA_ID = L.EDITORA_ID "
+                + "WHERE LIVRO_ID = ?";
+        
+        try {
+            PreparedStatement p = connection.prepareStatement(SQL);
+            p.setInt(1, id);
+            // Executa a SQL e mantém os valores no ResultSet rs
+            ResultSet rs = p.executeQuery();
+            // Navega pelos registros no rs
+            while (rs.next()) {
+                // Instancia a classe Livro e informa os valores do banco
+                objeto = new Livro();
+                objeto.setLivro_id(rs.getInt("livro_id"));
+                objeto.setTitulo(rs.getString("titulo"));
+                objeto.setAno( rs.getInt("ano") );
+                objeto.setDescricao( rs.getString("descricao") );
+                
+                Editora editora = new Editora();
+                editora.setEditora_id( rs.getInt("editora_id") );
+                editora.setNome_editora(rs.getString("nome"));
+                editora.setMun_editora(rs.getString("municipio"));
+                
+                objeto.setEditora(editora);
+            }
+            rs.close();
+            p.close();
+
+        } catch (SQLException ex) {
+            throw new Exception(ex);
+        }
+        return objeto;
     }
 
     public List<Livro> findAll() throws Exception {

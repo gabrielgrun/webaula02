@@ -5,6 +5,15 @@
  */
 package forms;
 
+import dao.EstudanteDAO;
+import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import model.Estudante;
+
 /**
  *
  * @author gg005249
@@ -29,7 +38,6 @@ public class EstudanteForm extends javax.swing.JFrame {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
-        txtStatus = new javax.swing.JComboBox<>();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -44,6 +52,7 @@ public class EstudanteForm extends javax.swing.JFrame {
         btnSalvar = new javax.swing.JButton();
         btnRemover = new javax.swing.JButton();
         btnNovo = new javax.swing.JButton();
+        txtStatus = new javax.swing.JTextField();
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -59,11 +68,9 @@ public class EstudanteForm extends javax.swing.JFrame {
         jScrollPane1.setViewportView(jTable1);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        txtStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "M", "T", "A", "R" }));
-        txtStatus.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtStatusActionPerformed(evt);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
             }
         });
 
@@ -88,9 +95,19 @@ public class EstudanteForm extends javax.swing.JFrame {
                 "ID Estudante", "Nome", "Curso", "Data", "Status"
             }
         ));
+        tabela.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tabelaMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(tabela);
 
         btnSalvar.setText("Salvar");
+        btnSalvar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSalvarActionPerformed(evt);
+            }
+        });
 
         btnRemover.setText("Remover");
 
@@ -108,17 +125,13 @@ public class EstudanteForm extends javax.swing.JFrame {
                     .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(42, 42, 42)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(txtNome, javax.swing.GroupLayout.DEFAULT_SIZE, 73, Short.MAX_VALUE)
-                            .addComponent(txtData)
-                            .addComponent(txtCurso)
-                            .addComponent(txtID)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(53, 53, 53)
-                        .addComponent(txtStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(42, 42, 42)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(txtNome, javax.swing.GroupLayout.DEFAULT_SIZE, 73, Short.MAX_VALUE)
+                    .addComponent(txtData)
+                    .addComponent(txtCurso)
+                    .addComponent(txtID)
+                    .addComponent(txtStatus))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(btnRemover, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -167,10 +180,45 @@ public class EstudanteForm extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void txtStatusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtStatusActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtStatusActionPerformed
+    private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
+        Estudante estudante = new Estudante();
+        SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+        estudante.setEstudanteNome(txtNome.getText());
+        estudante.setCursoNome(txtCurso.getText());
+        try {
+            estudante.setDataMatricula((new Date(formato.parse(txtData.getText()).getTime())));
+        } catch (ParseException ex) {
+            Logger.getLogger(EstudanteForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        estudante.setStatus(txtStatus.getText());
 
+        try {
+            if (mode.equals("INS")) {
+                estudanteDAO.save(estudante);
+            } else if (mode.equals("UPD")) {
+                estudanteDAO.update(estudante);
+            }
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage());
+        }
+        listar();
+    }//GEN-LAST:event_btnSalvarActionPerformed
+
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        listar();
+    }//GEN-LAST:event_formWindowOpened
+
+    private void tabelaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelaMouseClicked
+        int selected = tabela.getSelectedRow();
+        txtID.setText(tabela.getValueAt(selected, 0).toString());
+        txtNome.setText(tabela.getValueAt(selected, 1).toString());
+        txtCurso.setText(tabela.getValueAt(selected, 2).toString());
+        txtData.setText(tabela.getValueAt(selected, 3).toString());
+        txtStatus.setText(tabela.getValueAt(selected, 4).toString());
+        this.mode = "UPD";
+    }//GEN-LAST:event_tabelaMouseClicked
+
+    
     /**
      * @param args the command line arguments
      */
@@ -206,6 +254,8 @@ public class EstudanteForm extends javax.swing.JFrame {
         });
     }
 
+    private EstudanteDAO estudanteDAO;
+    private String mode = "INS";
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnNovo;
     private javax.swing.JButton btnRemover;
@@ -223,6 +273,6 @@ public class EstudanteForm extends javax.swing.JFrame {
     private javax.swing.JTextField txtData;
     private javax.swing.JTextField txtID;
     private javax.swing.JTextField txtNome;
-    private javax.swing.JComboBox<String> txtStatus;
+    private javax.swing.JTextField txtStatus;
     // End of variables declaration//GEN-END:variables
 }

@@ -1,9 +1,11 @@
 package dao;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -25,11 +27,12 @@ public class EstudanteDAO {
             PreparedStatement p = connection.prepareStatement(SQL);
             p.setString(1, estudante.getEstudanteNome());
             p.setString(2, estudante.getCursoNome());
-            p.setDate(3, estudante.getDataMatricula());
+            p.setDate(3, new Date(estudante.getDataMatricula().getTime()));
             p.setString(4, estudante.getStatus());
             p.execute();
             p.close();
         } catch (SQLException ex) {
+            ex.printStackTrace();
             throw new Exception(ex);
         }
     }
@@ -40,12 +43,13 @@ public class EstudanteDAO {
             PreparedStatement p = connection.prepareStatement(SQL);
             p.setString(1, estudante.getEstudanteNome());
             p.setString(2, estudante.getCursoNome());
-            p.setDate(3, estudante.getDataMatricula());
+            p.setDate(3, new Date(estudante.getDataMatricula().getTime()));
             p.setString(4, estudante.getStatus());
             p.setInt(5, estudante.getEstudanteID());
             p.execute();
             p.close();
         } catch (SQLException ex) {
+            ex.printStackTrace();
             throw new Exception(ex);
         }
     }
@@ -59,13 +63,14 @@ public class EstudanteDAO {
             p.execute();
             p.close();
         } catch(SQLException ex) {
+            ex.printStackTrace();
             Logger.getLogger(EstudanteDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     public List<Estudante> findAll() throws Exception {
         List<Estudante> list = new ArrayList<>();
         Estudante objeto;
-        String SQL = "SELECT * FROM ESTUDANTE ORDER BY ESTUDANTE_ID=?";
+        String SQL = "SELECT * FROM ESTUDANTE ORDER BY ESTUDANTE_ID";
         
         try {
             PreparedStatement p = connection.prepareStatement(SQL);
@@ -77,7 +82,8 @@ public class EstudanteDAO {
                 objeto.setEstudanteID(rs.getInt("estudante_id"));
                 objeto.setEstudanteNome(rs.getString("nome"));
                 objeto.setCursoNome(rs.getString("curso"));
-                objeto.setDataMatricula(rs.getDate("data_matricula"));
+                SimpleDateFormat f = new SimpleDateFormat("dd/MM/yyyy");
+                objeto.setDataMatricula((rs.getDate("data_matricula")));
                 objeto.setStatus(rs.getString("status"));
                 
                 list.add(objeto);
@@ -85,6 +91,7 @@ public class EstudanteDAO {
             rs.close();
             p.close();
         } catch (SQLException ex){
+            ex.printStackTrace();
             throw new Exception(ex);
         }
         return list;

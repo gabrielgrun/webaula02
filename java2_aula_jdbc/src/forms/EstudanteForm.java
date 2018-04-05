@@ -12,6 +12,7 @@ import java.text.SimpleDateFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 import model.Estudante;
 
 /**
@@ -110,8 +111,18 @@ public class EstudanteForm extends javax.swing.JFrame {
         });
 
         btnRemover.setText("Remover");
+        btnRemover.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRemoverActionPerformed(evt);
+            }
+        });
 
         btnNovo.setText("Novo");
+        btnNovo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNovoActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -188,6 +199,7 @@ public class EstudanteForm extends javax.swing.JFrame {
         try {
             estudante.setDataMatricula((new Date(formato.parse(txtData.getText()).getTime())));
         } catch (ParseException ex) {
+            ex.printStackTrace();
             Logger.getLogger(EstudanteForm.class.getName()).log(Level.SEVERE, null, ex);
         }
         estudante.setStatus(txtStatus.getText());
@@ -196,9 +208,11 @@ public class EstudanteForm extends javax.swing.JFrame {
             if (mode.equals("INS")) {
                 estudanteDAO.save(estudante);
             } else if (mode.equals("UPD")) {
+                estudante.setEstudanteID(Integer.parseInt(txtID.getText()));
                 estudanteDAO.update(estudante);
             }
         } catch (Exception ex) {
+            ex.printStackTrace();
             JOptionPane.showMessageDialog(this, ex.getMessage());
         }
         listar();
@@ -218,6 +232,54 @@ public class EstudanteForm extends javax.swing.JFrame {
         this.mode = "UPD";
     }//GEN-LAST:event_tabelaMouseClicked
 
+    private void btnNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNovoActionPerformed
+        txtID.setText("");
+        txtNome.setText("");
+        txtCurso.setText("");
+        txtData.setText("");
+        txtStatus.setText("");
+        this.mode = "INS";
+    }//GEN-LAST:event_btnNovoActionPerformed
+
+    private void btnRemoverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoverActionPerformed
+        Estudante estudante = new Estudante();
+
+        estudante.setEstudanteID(Integer.parseInt(txtID.getText()));
+        try { 
+        estudanteDAO.delete(estudante);
+        txtID.setText("");
+        txtNome.setText("");
+        txtCurso.setText("");
+        txtData.setText("");
+        txtStatus.setText("");
+        this.mode = "INS";
+        listar();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, ex.getMessage());
+        }
+    }//GEN-LAST:event_btnRemoverActionPerformed
+
+    private void listar() {
+        DefaultTableModel modelo = (DefaultTableModel)tabela.getModel();
+        modelo.setNumRows(0);
+        
+        try {
+            for (Estudante estudante : estudanteDAO.findAll()) {
+                SimpleDateFormat f = new SimpleDateFormat("dd/MM/yyyy");
+                String data = f.format(estudante.getDataMatricula());
+                String linha [] = {""+estudante.getEstudanteID(), 
+                estudante.getEstudanteNome(),estudante.getCursoNome(), data, estudante.getStatus(),};
+                
+                modelo.addRow(linha);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, ex.getMessage());
+        }
+    }
+    
+    
     
     /**
      * @param args the command line arguments

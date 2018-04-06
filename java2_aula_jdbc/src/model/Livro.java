@@ -1,5 +1,7 @@
 package model;
 
+import java.util.List;
+
 
 public class Livro {
     private int livro_id;
@@ -7,6 +9,7 @@ public class Livro {
     private String titulo;
     private int ano;
     private String descricao;
+    private List<Autor> autores;
 
     public int getLivro_id() {
         return livro_id;
@@ -47,4 +50,13 @@ public class Livro {
     public void setDescricao(String descricao) {
         this.descricao = descricao;
     }
+
+    public List<Autor> getAutores() {
+        return autores;
+    }
+
+    public void setAutores(List<Autor> autores) {
+        this.autores = autores;
+    }
+    
 }

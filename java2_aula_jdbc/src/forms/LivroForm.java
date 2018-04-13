@@ -129,6 +129,11 @@ public class LivroForm extends javax.swing.JFrame {
                 "ID", "Nome do Autor"
             }
         ));
+        tabela2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tabela2MouseClicked(evt);
+            }
+        });
         jScrollPane3.setViewportView(tabela2);
 
         btnAdd.setText("Add");
@@ -330,13 +335,11 @@ public class LivroForm extends javax.swing.JFrame {
         Livro livro = new Livro();
 
         livro.setLivro_id(Integer.parseInt(txtID.getText()));
+        
         try { 
         livroDAO.delete(livro);
-        txtID.setText("");
-        txtTitulo.setText("");
-        txtDesc.setText("");
-        txtAno.setText("");
-        this.mode = "INS";
+        this.mode = "INS"; 
+        limparCampos();
         loadTabela();
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage());
@@ -376,11 +379,17 @@ public class LivroForm extends javax.swing.JFrame {
         livro.setLivro_id(Integer.parseInt(txtID.getText()));
         livroDAO.deleteAutorLivro(autor, livro);
         try {
+            livro = livroDAO.findById(livro.getLivro_id());
             loadTabelaAutores(livro);
         } catch (Exception ex) {
             Logger.getLogger(LivroForm.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_bntDeleteAutorLivroActionPerformed
+
+    private void tabela2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabela2MouseClicked
+        int selected = tabela2.getSelectedRow();
+        txtBusca.setText(tabela2.getValueAt(selected, 0).toString());
+    }//GEN-LAST:event_tabela2MouseClicked
 
     public void limparCampos(){
         txtID.setText("");

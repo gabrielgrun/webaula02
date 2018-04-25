@@ -21,8 +21,8 @@ public class ConnectionJDBC {
             }
 
             //Dados de conexão
-            String servidor = "192.168.56.101";
-            String database = "/databases/AULA07.fdb";
+            String servidor = "localhost";
+            String database = "C:\\BD\\AULA07.FDB";
             String user = "SYSDBA";
             String password = "masterkey";
 

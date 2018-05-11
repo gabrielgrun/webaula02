@@ -24,9 +24,20 @@ public class ProdutoServlet extends HttpServlet {
         String cnpj = req.getParameter("cnpj");
         String endereco = req.getParameter("endereco");
         String nomeProd = req.getParameter("nomeProd");
-        String qtde = req.getParameter("qtde");
-        String valorProd = req.getParameter("valorProd");
-        Double valorTotal = Double.parseDouble(qtde) * Double.parseDouble(valorProd);
+        double qtde = 0;
+        double valorProd = 0;
+        
+        if (!req.getParameter("qtde").isEmpty()){
+            qtde = Double.parseDouble(req.getParameter("qtde"));
+        }
+        
+        if (!req.getParameter("valorProd").isEmpty()){
+            valorProd = Double.parseDouble(req.getParameter("valorProd"));
+        }
+   
+        double valorTotal = qtde * valorProd;
+        
+        
         
         PrintWriter saida = resp.getWriter();
         saida.println("Nome do Cliente: " + nomeCli + "<br>");

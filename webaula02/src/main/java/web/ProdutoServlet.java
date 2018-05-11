@@ -17,6 +17,30 @@ public class ProdutoServlet extends HttpServlet {
     List<String> preco = new ArrayList<>();
 
     @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.setContentType("text/html");
+        
+        String nomeCli = req.getParameter("nomeCli");
+        String cnpj = req.getParameter("cnpj");
+        String endereco = req.getParameter("endereco");
+        String nomeProd = req.getParameter("nomeProd");
+        String qtde = req.getParameter("qtde");
+        String valorProd = req.getParameter("valorProd");
+        Double valorTotal = Double.parseDouble(qtde) * Double.parseDouble(valorProd);
+        
+        PrintWriter saida = resp.getWriter();
+        saida.println("Nome do Cliente: " + nomeCli + "<br>");
+        saida.println("CNPJ: " + cnpj + "<br>");
+        saida.println("Endereço: " + endereco + "<br>");
+        saida.println("Nome do Produto: " + nomeProd + "<br>");
+        saida.println("Quantidade: " + qtde + "<br>");
+        saida.println("Valor do Produto: " + valorProd + "<br>");
+        saida.println("Valor Total do Pedido: " + valorTotal);
+    }
+    
+    
+
+    @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         arraylist = new ArrayList<>();
         arraylist.add("suco");

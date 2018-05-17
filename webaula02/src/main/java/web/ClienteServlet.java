@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
+//
 public class ClienteServlet extends HttpServlet {
 
     private int numAcessos = 0;
